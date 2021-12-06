@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <title>Cosmos Odyssey</title>
+</head>
+
+<body id="b" class="bg-image">
+    <div class="container pt-5 fluid">
+        <form action="/filter" method="POST" class="row d-flex justify-content-center" >
+            <select name="from" id="from" required onchange="isSame()" class="col-lg-3">
+                <option value="">From...</option>
+                <option value="Earth">Earth</option>
+                <option value="Jupiter">Jupiter</option>
+                <option value="Mars">Mars</option>
+                <option value="Mercury">Mercury</option>
+                <option value="Neptune">Neptune</option>
+                <option value="Saturn">Saturn</option>
+                <option value="Uranus">Uranus</option>
+                <option value="Venus">Venus</option>
+            </select>
+            <select name="to" id="to" required onchange="isSame()" class="col-lg-3">
+                <option value="">To...</option>
+                <option value="Earth">Earth</option>
+                <option value="Jupiter">Jupiter</option>
+                <option value="Mars">Mars</option>
+                <option value="Mercury">Mercury</option>
+                <option value="Neptune">Neptune</option>
+                <option value="Saturn">Saturn</option>
+                <option value="Uranus">Uranus</option>
+                <option value="Venus">Venus</option>
+            </select>
+            <input type="submit" value="&#128269" id="submit" class="col-lg-1">
+        </form>
+        <div class="row d-flex justify-content-center pt-3">
+            <p id="message" hidden class="col-lg-7 message"><b>Departure and destination locations cannot be the
+                    same!</b></p>
+                </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function isSame() {
+        var v1 = document.getElementById('from').value
+        var v2 = document.getElementById('to').value
+        if (v1 == v2 && v1 != "" && v2 != "") {
+            document.getElementById('submit').disabled = true
+            document.getElementById('message').hidden = false
+        } else {
+            document.getElementById('submit').disabled = false
+            document.getElementById('message').hidden = true
+
+        }
+    }
+</script>

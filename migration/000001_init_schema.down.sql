@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS flight;
+DROP TABLE IF EXISTS route_info;
+DROP TABLE IF EXISTS company;
+DROP TABLE IF EXISTS pricelist;

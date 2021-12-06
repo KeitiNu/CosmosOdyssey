@@ -1,0 +1,14 @@
+body{
+    background-image: url(../templates/static/img/planets.jpg);
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+p{
+    color: white;
+    background-color: rgba(255, 255, 255, 0.357);
+    padding: 1vh;
+    border-radius: 30px;
+}

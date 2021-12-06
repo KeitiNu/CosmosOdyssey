@@ -1,0 +1,67 @@
+body{
+    background-image: url(../templates/static/img/planets.jpg);
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.reservation {
+    display: none;
+    overflow: hidden;
+}
+
+.accordion:after {
+    content: 'Choose';
+
+}
+.accordion:hover, .make-reservation:hover, .submit:hover{
+    background-color: rgba(126, 126, 201);
+}
+
+.accordion, .make-reservation, .submit{
+    font-weight: 700;
+    border-color: rgb(192, 167, 228);
+    border-width: 3px;
+}
+
+.active:after {
+    content: "Hide";
+}
+
+
+
+
+.filter {
+    background-color: rgb(49, 49, 133, 0.9);
+    color: white;
+}
+
+.results {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: black solid 1px;
+}
+
+.result {
+    background-color: rgba(255, 255, 255, 0.3);
+
+}
+
+.route{
+    background-color: rgb(49, 49, 133, 0.9);
+    color: white;
+}
+
+.field-names{
+    background-color: rgba(126, 126, 201, 0.9);
+
+}
+
+.data{
+    background-color: rgba(252, 175, 210, 0.8);
+}
+
+h5{
+    color: rgb(255, 130, 130)
+}
+

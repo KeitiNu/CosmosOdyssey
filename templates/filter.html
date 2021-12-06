@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/filter.css">
+    <title>Cosmos Odyssey</title>
+</head>
+
+{{$id := .PriceListID}}
+{{$valid := .ValidUntil}}
+
+
+<body>
+    <div class="container">
+        <div class="row pt-3">
+            <div class="filter col-lg-4">
+
+                <a href="/">Home</a>
+
+                <form action="/filter" method="POST" id="form">
+                    <select name="from" id="from" hidden>
+                        <option value="{{.FormInfo.DepartureLocation}}" >{{.FormInfo.DepartureLocation}}</option>
+                    </select>
+                    <select name="to" id="to" hidden>
+                        <option value="{{.FormInfo.Destination}}" >{{.FormInfo.Destination}}</option>
+                    </select><br>
+                    <h5>{{.FormInfo.DepartureLocation}} -> {{.FormInfo.Destination}}</h5>
+                    <!-- Filter for providers -->
+                    <b>Companies:</b><br>
+                    {{range $key, $value := .UniqueProviders }}
+                    <label for="{{$key}}">
+                        <input type="checkbox" name="providers" value="{{$key}}" id="{{$key}}" {{if $value}} checked
+                            {{end}}>
+                        {{$key}}
+                    </label><br>
+                    {{end}}
+                    <!-- Filter for price -->
+                    <b>Price:</b><br>
+                    {{if .FormInfo.ChosenPrice }}
+                    <input type="range" id="price" name="price" min="0" max="{{.FormInfo.MaxPrice}}"
+                        value="{{.FormInfo.ChosenPrice}}" oninput="this.nextElementSibling.value = this.value">
+                    <output>{{.FormInfo.ChosenPrice}}</output><br>
+                    {{else}}
+                    <input type="range" id="price" name="price" min="0" max="{{.FormInfo.MaxPrice}}"
+                        value="{{.FormInfo.MaxPrice}}" oninput="this.nextElementSibling.value = this.value">
+                    <output>{{.FormInfo.MaxPrice}}</output><br>
+                    {{end}}
+                    <!-- Filter for distance -->
+                    <b>Distance:</b> <br>
+                    {{if .FormInfo.ChosenDistance }}
+                    <input type="range" id="distance" name="distance" min="0" max="{{.FormInfo.MaxDistance}}"
+                        value="{{.FormInfo.ChosenDistance}}" oninput="this.nextElementSibling.value = this.value">
+                    <output>{{.FormInfo.ChosenDistance}}</output><br>
+                    {{else}}
+                    <input type="range" id="distance" name="distance" min="0" max="{{.FormInfo.MaxDistance}}"
+                        value="{{.FormInfo.MaxDistance}}" oninput="this.nextElementSibling.value = this.value">
+                    <output>{{.FormInfo.MaxDistance}}</output><br>
+                    {{end}}
+                    <!-- Filter for travel time -->
+                    <b>Travel time:</b><br>
+                    {{if .FormInfo.ChosenTime}}
+                    <input type="range" id="time" name="time" min="0" max="{{.FormInfo.MaxTime}}"
+                        value="{{.FormInfo.ChosenTime}}" oninput="this.nextElementSibling.value = this.value + 'h'">
+                    <output>{{.FormInfo.ChosenTime}}h</output><br>
+                    {{else}}
+                    <input type="range" id="time" name="time" min="0" max="{{.FormInfo.MaxTime}}"
+                        value="{{.FormInfo.MaxTime}}" oninput="this.nextElementSibling.value = this.value + 'h'">
+                    <output>{{.FormInfo.MaxTime}}h</output><br>
+                    {{end}}
+                    <!-- Sort -->
+                    <b>Sort by:</b><br>
+                    <label for="price_sort">
+                        <input type="radio" name="sort" value="price" id="price_sort">
+                        Price</label><br>
+                    <label for="distance_sort">
+                        <input type="radio" name="sort" value="distance" id="distance_sort">
+                        Distance</label><br>
+                    <label for="duration_sort">
+                        <input type="radio" name="sort" value="duration" id="duration_sort">
+                        Duration</label><br>
+                    <!-- Submit -->
+                    <input type="submit" value="Search" class="submit"><br>
+                </form>
+
+            </div>
+            {{if .FlightPlans}}
+            <div class=" col-lg-8 result">
+                {{range .FlightPlans }}
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8 results route">
+                        <h5>
+                            {{$r := .Route}}
+                            {{range .Route }}
+                            {{.From.Name}}
+                            -
+                            {{end}}
+                            {{.Destination}}
+                        </h5>
+                    </div>
+                </div>
+                <div class="row  d-flex justify-content-center">
+                    <div class="col-lg-2 results field-names"><b>Total Price</b></div>
+                    <div class="col-lg-3 results field-names"><b>Total Duration</b></div>
+                    <div class="col-lg-3 results field-names"><b>Total Distance</b></div>
+
+                </div>
+                <div class="row  d-flex justify-content-center">
+                    <div class="col-lg-2 results data">{{printf "%.2f" .TotalPrice}}$</div>
+                    <div class="col-lg-3 results data">{{.TravelTime}}</div>
+                    <div class="col-lg-3 results data">{{printf "%d" .TotalDistance}}<br></div>
+
+                </div>
+                <div class="row  d-flex justify-content-center">
+                    <div class="col-lg-2 results field-names"><b>Company</b></div>
+                    <div class="col-lg-2 results field-names"><b>Price</b></div>
+                    <div class="col-lg-2 results field-names"><b>Start</b></div>
+                    <div class="col-lg-2 results field-names"><b>End</b></div>
+                </div>
+                {{range $i, $v := .Flights}}
+                <div class="row  d-flex justify-content-center">
+                    <div class="col-lg-2 results data">{{.Company.Name}} <br>
+                        ({{(index $r $i).From.Name}} -> {{(index $r $i).To.Name}})
+                    </div>
+                    <div class="col-lg-2 results data">{{printf "%.2f" .Price}}$</div>
+                    <div class="col-lg-2 results data">{{.FlightStart.Format "02.01.2006 15:04 MST"}}</div>
+                    <div class="col-lg-2 results data">{{.FlightEnd.Format "02.01.2006 15:04 MST"}}</div>
+                </div>
+                {{end}}
+                <div class="row  d-flex justify-content-center">
+                    <div class="col-lg-8 results">
+                        <button class="accordion my-2"></button>
+                        <form action="/reservation" method="POST" class="reservation pt-3">
+                            <input type="text" name="firstname" placeholder="First Name" class="first-name">
+                            <input type="text" name="lastname" placeholder="Last Name" class="last-name"><br>
+                            <input type="hidden" name="pricelistid" value="{{$id}}">
+                            <input type="hidden" name="valid" value="{{$valid}}">
+                            <input type="hidden" name="totalprice" value="{{.TotalPrice}}">
+                            <input type="hidden" name="totaltime" value="{{.TravelTime}}">
+                            {{range .Flights}}
+                            <input type="hidden" name="flightid" value="{{.ID}}">
+                            {{end}}
+                            <input type="submit" value="Make a Reservation" class="make-reservation mt-2">
+
+                        </form><br>
+                    </div>
+                </div>
+                {{end}}
+
+            </div>
+            {{else}}
+            <div class="results col-lg-8  d-flex justify-content-center ">
+                <h5>No flights found with selected criteria</h5>
+            </div>
+            {{end}}
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    //accordion from W3schools
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>
